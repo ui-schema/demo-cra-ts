@@ -12,21 +12,6 @@ import { OrderedMap } from 'immutable'
 import { GridContainer } from '@ui-schema/ds-material/GridContainer'
 import { DataDebug } from '../components/DataDebug'
 
-export const PageSimpleForm: React.ComponentType = () => {
-    return <>
-        <Container maxWidth={'md'} fixed style={{display: 'flex'}}>
-            <Nav/>
-            <Box mx={2} py={1} style={{flexGrow: 1}}>
-                <Box mb={2}>
-                    <Typography variant={'h1'} gutterBottom>UI-Schema Simple Form</Typography>
-                    <Typography variant={'body2'} gutterBottom>The form on this page is the same as `Custom Rendering`, but rendered automatically using <code>injectPluginStack(GridContainer)</code>.</Typography>
-                </Box>
-                <DemoComponent/>
-            </Box>
-        </Container>
-    </>
-}
-
 const schema = createOrderedMap({
     type: 'object',
     properties: {
@@ -84,4 +69,19 @@ const DemoComponent = () => {
             <DataDebug/>
         </UIStoreProvider>
     </React.Fragment>
+}
+
+export const PageSimpleForm: React.ComponentType = () => {
+    return <>
+        <Container maxWidth={'md'} fixed style={{display: 'flex'}}>
+            <Nav/>
+            <Box mx={2} py={1} style={{flexGrow: 1}}>
+                <Box mb={2}>
+                    <Typography variant={'h1'} gutterBottom>UI-Schema Simple Form</Typography>
+                    <Typography variant={'body2'} gutterBottom>The form on this page is the same as `Custom Rendering`, but rendered automatically using <code>injectPluginStack(GridContainer)</code>.</Typography>
+                </Box>
+                <DemoComponent/>
+            </Box>
+        </Container>
+    </>
 }

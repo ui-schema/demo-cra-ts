@@ -15,21 +15,6 @@ import { StringRenderer } from '@ui-schema/ds-material/Widgets/TextField'
 import { WidgetCountrySelect } from '../components/Widgets/WidgetCountrySelect'
 import { DataDebug } from '../components/DataDebug'
 
-export const PageCustomForm: React.ComponentType = () => {
-    return <>
-        <Container maxWidth={'md'} fixed style={{display: 'flex'}}>
-            <Nav/>
-            <Box mx={2} py={1} style={{flexGrow: 1}}>
-                <Box mb={2}>
-                    <Typography variant={'h1'} gutterBottom>UI-Schema Custom Form</Typography>
-                    <Typography variant={'body2'} gutterBottom>The form on this page is the same as `SimpleForm`, but rendered at custom positions per-code.</Typography>
-                </Box>
-                <DemoComponent/>
-            </Box>
-        </Container>
-    </>
-}
-
 const schema = createOrderedMap({
     type: 'object',
     properties: {
@@ -131,4 +116,19 @@ const CustomFormContent: React.FC<{
             />
         </Grid>
     </ObjectGroup>
+}
+
+export const PageCustomForm: React.ComponentType = () => {
+    return <>
+        <Container maxWidth={'md'} fixed style={{display: 'flex'}}>
+            <Nav/>
+            <Box mx={2} py={1} style={{flexGrow: 1}}>
+                <Box mb={2}>
+                    <Typography variant={'h1'} gutterBottom>UI-Schema Custom Form</Typography>
+                    <Typography variant={'body2'} gutterBottom>The form on this page is the same as `SimpleForm`, but rendered at custom positions per-code.</Typography>
+                </Box>
+                <DemoComponent/>
+            </Box>
+        </Container>
+    </>
 }
