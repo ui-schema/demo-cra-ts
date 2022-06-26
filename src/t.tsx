@@ -1,4 +1,3 @@
-import React from 'react'
 import { makeTranslator, createMap, Translator } from '@ui-schema/ui-schema'
 import * as en from '@ui-schema/dictionary/en'
 import * as de from '@ui-schema/dictionary/de'

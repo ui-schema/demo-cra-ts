@@ -1,4 +1,4 @@
-import { getContrastRatio, createTheme, Theme } from '@mui/material/styles'
+import { createTheme, Theme } from '@mui/material/styles'
 
 const headingFont = '"Playfair Display", Didot, Georgia, "Times New Roman", Times, serif'
 const headingBody = 'Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif'
