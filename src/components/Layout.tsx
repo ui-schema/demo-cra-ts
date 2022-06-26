@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import { PageHome } from '../pages/PageHome'
 import { PageSimpleForm } from '../pages/PageSimpleForm'
 import { PageCustomForm } from '../pages/PageCustomForm'
+import { PageCustomUpload } from '../pages/PageCustomUpload'
 
 export const Nav: React.FC<{}> = () => {
     const navigate = useNavigate()
@@ -18,6 +19,9 @@ export const Nav: React.FC<{}> = () => {
             </ListItemButton>
             <ListItemButton onClick={() => navigate('/custom')} selected={'/custom' === location.pathname}>
                 <ListItemText primary={'Custom Rendering'}/>
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate('/custom-upload')} selected={'/custom-upload' === location.pathname}>
+                <ListItemText primary={'File Upload (Custom)'}/>
             </ListItemButton>
         </MuiList>
     </Box>
@@ -42,6 +46,7 @@ export const Layout: React.ComponentType<{}> = () => {
             <Route path={'/'} element={<PageHome/>}/>
             <Route path={'/simple'} element={<PageSimpleForm/>}/>
             <Route path={'/custom'} element={<PageCustomForm/>}/>
+            <Route path={'/custom-upload'} element={<PageCustomUpload/>}/>
         </Routes>
     </div>
 }

@@ -47,31 +47,6 @@ const schema = createOrderedMap({
     },
 } as JsonSchema)
 
-const DemoComponent = () => {
-    const showValidity = true
-    const [store, setStore] = React.useState(() => createStore(OrderedMap({})))
-
-    const onChange: onChangeHandler = React.useCallback(
-        (actions) => setStore(storeUpdater(actions)),
-        [setStore],
-    )
-
-    return <React.Fragment>
-        <UIStoreProvider
-            store={store}
-            onChange={onChange}
-            showValidity={showValidity}
-        >
-            <CustomFormContent
-                schema={schema}
-                showValidity={showValidity}
-            />
-
-            <DataDebug/>
-        </UIStoreProvider>
-    </React.Fragment>
-}
-
 const WidgetTextField = applyPluginStack(StringRenderer)
 const CountrySelect = applyPluginStack(WidgetCountrySelect)
 
@@ -116,6 +91,31 @@ const CustomFormContent: React.FC<{
             />
         </Grid>
     </ObjectGroup>
+}
+
+const DemoComponent = () => {
+    const showValidity = true
+    const [store, setStore] = React.useState(() => createStore(OrderedMap({})))
+
+    const onChange: onChangeHandler = React.useCallback(
+        (actions) => setStore(storeUpdater(actions)),
+        [setStore],
+    )
+
+    return <React.Fragment>
+        <UIStoreProvider
+            store={store}
+            onChange={onChange}
+            showValidity={showValidity}
+        >
+            <CustomFormContent
+                schema={schema}
+                showValidity={showValidity}
+            />
+
+            <DataDebug/>
+        </UIStoreProvider>
+    </React.Fragment>
 }
 
 export const PageCustomForm: React.ComponentType = () => {

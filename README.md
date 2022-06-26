@@ -10,8 +10,9 @@ Files in `src`:
 - [components/Layout.tsx](./src/components/Layout.tsx) app layout, routing and nav
 - [components/UISchema.tsx](./src/components/UISchema.tsx) UI-Schema widget setup
 - example pages:
-    - [pages/PageSimpleForm.tsx](./src/pages/PageSimpleForm.tsx) with simple form, usage of `WidgetCountrySelect`
-    - [pages/PageCustomForm.tsx](./src/pages/PageCustomForm.tsx) with custom rendered form, usage of `WidgetCountrySelect`
+    - [pages/PageSimpleForm.tsx](./src/pages/PageSimpleForm.tsx), automatic rendered, usage of `WidgetCountrySelect`
+    - [pages/PageCustomForm.tsx](./src/pages/PageCustomForm.tsx), custom rendered, usage of `WidgetCountrySelect`
+    - [pages/PageCustomUpload.tsx](./src/pages/PageCustomUpload.tsx), custom rendered, native file upload widget
 - ~multiple~ widgets in: [Widgets/](./src/components/Widgets)
     - [WidgetCountrySelect.tsx](./src/components/Widgets/WidgetCountrySelect.tsx), uses an API to populate the `Select` options
 
