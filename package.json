@@ -12,6 +12,7 @@
         "@types/react": "^17.0",
         "@types/react-loadable": "^5.5.4",
         "@ui-schema/dictionary": "~0.0.10",
+        "@ui-schema/ui-schema": "~0.4.2",
         "@ui-schema/ds-material": "~0.4.0-alpha.5",
         "react-helmet": "^6.1.0",
         "@testing-library/jest-dom": "^5.16.3",
