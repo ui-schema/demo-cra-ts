@@ -1,7 +1,7 @@
 import { createTheme, Theme } from '@mui/material/styles'
 
-const headingFont = '"Playfair Display", Didot, Georgia, "Times New Roman", Times, serif'
-const headingBody = 'Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif'
+const fontHeading = '"Playfair Display", Didot, Georgia, "Times New Roman", Times, serif'
+const fontBody = 'Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif'
 const universal = {
     palette: {
         contrastThreshold: 2,
@@ -18,46 +18,47 @@ const universal = {
     typography: {
         fontSize: 14,
         h1: {
-            fontFamily: headingFont,
+            fontFamily: fontHeading,
             fontSize: '2.45rem',
         },
         h2: {
-            fontFamily: headingFont,
+            fontFamily: fontHeading,
             fontSize: '2.115rem',
         },
         h3: {
-            fontFamily: headingFont,
+            fontFamily: fontHeading,
             fontSize: '1.95rem',
         },
         h4: {
-            fontFamily: headingFont,
+            fontFamily: fontHeading,
             fontSize: '1.75rem',
         },
         h5: {
-            fontFamily: headingFont,
+            fontFamily: fontHeading,
             fontSize: '1.615rem',
         },
         h6: {
-            fontFamily: headingFont,
+            fontFamily: fontHeading,
             fontSize: '1.25rem',
         },
+        subtitle1: {
+            fontFamily: fontHeading,
+            fontSize: '1.25rem',
+        },
+        subtitle2: {
+            fontFamily: fontHeading,
+            fontSize: '1rem',
+        },
+        fontFamily: fontBody,
         body1: {
-            fontFamily: headingBody,
+            fontFamily: fontBody,
             fontSize: '1.0125rem',
             letterSpacing: '0.0195em',
         },
         body2: {
-            fontFamily: headingBody,
+            fontFamily: fontBody,
             fontSize: '0.95rem',
             letterSpacing: '0.021em',
-        },
-        subtitle1: {
-            fontFamily: headingFont,
-            fontSize: '1.25rem',
-        },
-        subtitle2: {
-            fontFamily: headingFont,
-            fontSize: '1rem',
         },
     },
     /*shape: {
