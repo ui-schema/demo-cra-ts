@@ -1,16 +1,15 @@
+import { createStore, onChangeHandler, storeUpdater, UIStoreProvider, WidgetEngine } from '@ui-schema/react'
+import { createOrderedMap } from '@ui-schema/ui-schema'
 import React from 'react'
 import Container from '@mui/material/Container'
+import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Nav } from '../components/Layout'
-import {
-    createOrderedMap, createStore, injectPluginStack, JsonSchema,
-    onChangeHandler, storeUpdater,
-    UIStoreProvider,
-} from '@ui-schema/ui-schema'
 import { OrderedMap } from 'immutable'
 import { GridContainer } from '@ui-schema/ds-material/GridContainer'
-import { DataDebug } from '../components/DataDebug'
+import { DataDebugViewer } from '../components/DebugViewer.js'
+import { FormValidity } from '../components/FormValidity.js'
+import { ReadMore } from '../components/ReadMore.js'
 
 const schema = createOrderedMap({
     type: 'object',
@@ -25,13 +24,17 @@ const schema = createOrderedMap({
                 oneOf: [
                     {
                         const: 'Chips',
-                    }, {
+                    },
+                    {
                         const: 'Crisps',
-                    }, {
+                    },
+                    {
                         const: 'Tacos',
-                    }, {
+                    },
+                    {
                         const: 'Nachos',
-                    }, {
+                    },
+                    {
                         const: 'Cheese',
                     },
                 ],
@@ -42,9 +45,8 @@ const schema = createOrderedMap({
             widget: 'CountrySelect',
         },
     },
-} as JsonSchema)
+})
 
-const GridStack = injectPluginStack(GridContainer)
 const DemoComponent = () => {
     const showValidity = true
     const [store, setStore] = React.useState(() => createStore(OrderedMap({})))
@@ -60,28 +62,34 @@ const DemoComponent = () => {
             onChange={onChange}
             showValidity={showValidity}
         >
-            <GridStack
-                schema={schema}
-                showValidity={showValidity}
-                isRoot
-            />
+            <GridContainer>
+                <WidgetEngine
+                    schema={schema}
+                    isRoot
+                />
+            </GridContainer>
 
-            <DataDebug/>
+            <FormValidity store={store}/>
+
+            <DataDebugViewer/>
         </UIStoreProvider>
     </React.Fragment>
 }
 
-export const PageSimpleForm: React.ComponentType = () => {
+export const PageSimpleForm = () => {
     return <>
-        <Container maxWidth={'md'} fixed style={{display: 'flex'}}>
-            <Nav/>
-            <Box mx={2} py={1} style={{flexGrow: 1}}>
+        <Container maxWidth={'lg'} fixed>
+            <Paper variant={'outlined'} sx={{px: 2, pt: 1, pb: 4}}>
                 <Box mb={2}>
                     <Typography variant={'h1'} gutterBottom>UI-Schema Simple Form</Typography>
-                    <Typography variant={'body2'} gutterBottom>The form on this page is the same as `Custom Rendering`, but rendered automatically using <code>injectPluginStack(GridContainer)</code>.</Typography>
+                    <ReadMore>
+                        <Typography variant={'body1'} gutterBottom>The form on this page is automatically generated using a single `WidgetEngine` component. It showcases how UI-Schema can interpret a JSON Schema and render the corresponding form fields without explicit component mapping for each field.</Typography>
+                        <Typography variant={'body1'} gutterBottom>The form includes various input types, such as text fields, and a custom `CountrySelect` widget that fetches data from an external API to populate its options.</Typography>
+                        <Typography variant={'body1'} gutterBottom>The `DataDebugViewer` below the form displays the current state of the form data, updating in real-time as you interact with the fields. This is useful for understanding how UI-Schema manages and stores the form's state.</Typography>
+                    </ReadMore>
                 </Box>
                 <DemoComponent/>
-            </Box>
+            </Paper>
         </Container>
     </>
 }

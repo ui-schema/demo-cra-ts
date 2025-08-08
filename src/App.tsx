@@ -1,37 +1,87 @@
-import React from 'react'
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { customTheme } from './theme'
-import { Layout } from './components/Layout'
-import { BrowserRouter } from 'react-router-dom'
-import { UIMetaProvider } from '@ui-schema/ui-schema/UIMeta'
-import CircularProgress from '@mui/material/CircularProgress'
-import { browserT } from './t'
-import { getCustomWidgets } from './components/UISchema'
+import IconButton from '@mui/material/IconButton'
+import { Route, Routes } from 'react-router'
+import IcGitHub from '@mui/icons-material/GitHub'
+import IcInvert from '@mui/icons-material/InvertColors'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import { RouterLink } from './components/MuiLink/MuiLink.js'
+import { MuiNavLink } from './components/MuiLink/MuiNavLink.js'
+import { routes } from './routes.js'
 
-const customThemes = customTheme('#05aeca')
+export default function App({toggleTheme}: { toggleTheme: () => void }) {
+    return (
+        <Box
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'auto',
+                maxHeight: '100%',
+            }}
+        >
+            <Box
+                px={1}
+                style={{display: 'flex', alignItems: 'center', textAlign: 'left'}}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        overflow: 'auto',
+                        py: 1,
+                        px: 1,
+                    }}
+                >
+                    {routes.map((route, i, arr) => [
+                        <MuiNavLink
+                            key={'r:' + route.path}
+                            href={route.path}
+                            exact={route.path === '/'}
+                            sx={{whiteSpace: 'nowrap'}}
+                        >
+                            {route.name}
+                        </MuiNavLink>,
+                        i < arr.length - 1 ?
+                            <Divider key={'d:' + route.path} orientation={'vertical'} sx={{
+                                mx: 0.5,
+                                height: '0.75rem',
+                            }}/> :
+                            null,
+                    ]).flat()}
+                </Box>
 
-const customWidgets = getCustomWidgets()
-
-export const App: React.ComponentType<{}> = () => {
-    const [themeId] = React.useState<'dark' | 'light'>('dark')
-
-    const [theme, setTheme] = React.useState(customThemes[themeId])
-    React.useEffect(() => {
-        setTheme({...customThemes[themeId]})
-    }, [setTheme, themeId])
-
-    return <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-            <CssBaseline/>
-
-            <BrowserRouter>
-                <React.Suspense fallback={<CircularProgress/>}>
-                    <UIMetaProvider t={browserT} widgets={customWidgets}>
-                        <Layout/>
-                    </UIMetaProvider>
-                </React.Suspense>
-            </BrowserRouter>
-        </ThemeProvider>
-    </StyledEngineProvider>
+                <IconButton
+                    size={'small'}
+                    onClick={() => toggleTheme()}
+                    sx={{ml: 'auto'}}
+                    aria-label={'toggle theme'}
+                >
+                    <IcInvert fontSize={'small'}/>
+                </IconButton>
+                <IconButton
+                    component={RouterLink}
+                    size={'small'}
+                    href={'https://github.com/ui-schema/ui-schema'}
+                    aria-label={'core project on github'}
+                    target={'_blank'}
+                    rel="noreferrer noopener"
+                    sx={{ml: 0.5}}
+                >
+                    <IcGitHub fontSize={'small'}/>
+                </IconButton>
+            </Box>
+            <Box
+                style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}
+            >
+                <Routes>
+                    {routes.map((route) => (
+                        <Route
+                            key={route.path}
+                            path={route.path}
+                            Component={route.Component}
+                        />
+                    ))}
+                </Routes>
+            </Box>
+        </Box>
+    )
 }

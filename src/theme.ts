@@ -4,7 +4,7 @@ const fontHeading = '"Playfair Display", Didot, Georgia, "Times New Roman", Time
 const fontBody = 'Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif'
 const universal = {
     palette: {
-        contrastThreshold: 2,
+        contrastThreshold: 4.5,
     },
     breakpoints: {
         values: {
@@ -64,6 +64,19 @@ const universal = {
     /*shape: {
         borderRadius: 0,
     },*/
+    components: {
+        MuiLink: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 1,
+                    '&.Mui-focusVisible:focus-visible': {
+                        outline: '2px solid currentColor',
+                        outlineOffset: '1px',
+                    },
+                },
+            },
+        },
+    },
 }
 
 export const customTheme = (primary: string): {
@@ -108,9 +121,8 @@ export const customTheme = (primary: string): {
             },
         },
         components: {
-            MuiPaper: {
-                styleOverrides: {root: {backgroundImage: 'unset'}},
-            },
+            ...universal.components,
+            MuiPaper: {},
             MuiInputLabel: {
                 styleOverrides: {
                     root: {
@@ -162,6 +174,9 @@ export const customTheme = (primary: string): {
             action: {
                 hoverOpacity: 0.2,
             },
+        },
+        components: {
+            ...universal.components,
         },
     })
 

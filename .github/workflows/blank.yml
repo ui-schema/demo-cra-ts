@@ -1,13 +1,13 @@
-name: UI-Schema CRA CI
+name: UI-Schema Examples CI
 
 env:
     DOCKER_BUILDKIT: 1
 
 on:
     push:
-        branches: [master, develop]
+        branches: [ master, develop ]
     pull_request:
-        branches: [master, develop]
+        branches: [ master, develop ]
     workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [14.x]
+                node-version: [ 24.x ]
         steps:
             -   uses: actions/checkout@v2
             -   name: Set Branch
@@ -42,6 +42,7 @@ jobs:
 
             -   name: Run tests
                 run: |
+                    npx playwright install chromium --with-deps
                     npm test
 
             -   name: Build

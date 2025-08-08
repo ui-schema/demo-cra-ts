@@ -1,32 +1,29 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES2022",
+        "useDefineForClassFields": true,
         "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
         ],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "baseUrl": "./",
-        "removeComments": false,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
+        "module": "Node16",
+        "moduleResolution": "Node16",
+        "jsx": "react-jsx",
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx",
-        "noFallthroughCasesInSwitch": true
+        "strict": true,
+        "noImplicitAny": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": false,
+        "allowSyntheticDefaultImports": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true
     },
     "include": [
         "src"
-    ],
-    "exclude": [
-        "node_modules/**/*",
-        "icons/**/*"
     ]
 }

@@ -1,5 +1,7 @@
 import { makeTranslator, createMap, Translator } from '@ui-schema/ui-schema'
+// @ts-expect-error alpha version bug, missing d.ts
 import * as en from '@ui-schema/dictionary/en'
+// @ts-expect-error alpha version bug, missing d.ts
 import * as de from '@ui-schema/dictionary/de'
 
 const icons = {}

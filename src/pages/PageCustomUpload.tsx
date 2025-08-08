@@ -1,21 +1,23 @@
+import {
+    createStore,
+    onChangeHandler,
+    SchemaLayer,
+    storeUpdater,
+    UIStoreProvider,
+    WidgetEngine,
+} from '@ui-schema/react'
+import { WidgetProps } from '@ui-schema/react/Widget'
+import { createOrderedMap, SomeSchema, StoreKeys } from '@ui-schema/ui-schema'
 import React from 'react'
 import Container from '@mui/material/Container'
+import Paper from '@mui/material/Paper'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
-import { Nav } from '../components/Layout'
-import {
-    createOrderedMap, createStore, JsonSchema,
-    onChangeHandler, StoreSchemaType, storeUpdater,
-    UIStoreProvider, StoreKeys, ObjectGroup,
-    extractValue, applyPluginStack, WidgetProps, WithValue,
-    PROGRESS_START, PROGRESS_DONE, PROGRESS_ERROR, PROGRESS_NONE,
-    PROGRESS,
-} from '@ui-schema/ui-schema'
-import { List, OrderedMap } from 'immutable'
-import { DataDebug } from '../components/DataDebug'
+import { List, Map, OrderedMap } from 'immutable'
+import { DataDebugViewer } from '../components/DebugViewer.js'
 
 const schema = createOrderedMap({
     type: 'object',
@@ -35,9 +37,23 @@ const schema = createOrderedMap({
             },
         },
     },
-} as JsonSchema)
+})
 
-const FileUpload: React.ComponentType<WidgetProps & WithValue> = ({storeKeys, onChange, schema, required, value}) => {
+enum PROGRESS {
+    PROGRESS_NONE,
+    PROGRESS_START,
+    PROGRESS_DONE,
+    PROGRESS_ERROR,
+}
+
+const {
+    PROGRESS_NONE,
+    PROGRESS_START,
+    PROGRESS_DONE,
+    PROGRESS_ERROR,
+} = PROGRESS
+
+const WidgetFileUpload: React.ComponentType<WidgetProps> = ({storeKeys, onChange, schema, required, value}) => {
     const [loading, setLoading] = React.useState<PROGRESS>(PROGRESS_NONE)
     return <Box style={{display: 'flex', flexDirection: 'column'}}>
         <input
@@ -48,10 +64,41 @@ const FileUpload: React.ComponentType<WidgetProps & WithValue> = ({storeKeys, on
                 // @ts-ignore
                 formData.append('file', e.target.files[0])
                 // todo: handle `is uploading`
-                fetch('https://file.io', {method: 'POST', body: formData})
+                // fetch('https://file.io', {method: 'POST', body: formData})
+                //     .then(r => r.json())
+                //     .then(data => {
+                //         if (data.status === 200) {
+                //             setLoading(PROGRESS_DONE)
+                //             console.log('file uploaded!', data)
+                //             onChange({
+                //                 type: 'set',
+                //                 scopes: ['value'],
+                //                 storeKeys: storeKeys,
+                //                 data: {
+                //                     value: OrderedMap({
+                //                         link: data.link,
+                //                         expires: data.expires,
+                //                         name: data.name,
+                //                     }),
+                //                 },
+                //                 schema,
+                //                 required,
+                //             })
+                //         } else {
+                //             console.error('File upload error!', data)
+                //             setLoading(PROGRESS_ERROR)
+                //         }
+                //     })
+                //     .catch((e) => {
+                //         console.error('File upload fetch error!', e)
+                //         setLoading(PROGRESS_ERROR)
+                //     })
+
+                // a different provider, as file.io now needs auth
+                fetch('https://upload.gofile.io/uploadfile', {method: 'POST', body: formData})
                     .then(r => r.json())
                     .then(data => {
-                        if(data.status === 200) {
+                        if (data.status) {
                             setLoading(PROGRESS_DONE)
                             console.log('file uploaded!', data)
                             onChange({
@@ -60,16 +107,14 @@ const FileUpload: React.ComponentType<WidgetProps & WithValue> = ({storeKeys, on
                                 storeKeys: storeKeys,
                                 data: {
                                     value: OrderedMap({
-                                        link: data.link,
-                                        expires: data.expires,
-                                        name: data.name,
+                                        link: data.data.downloadPage,
+                                        name: data.data.name,
                                     }),
                                 },
                                 schema,
                                 required,
                             })
                         } else {
-                            // todo: implement validity handling on error
                             console.error('File upload error!', data)
                             setLoading(PROGRESS_ERROR)
                         }
@@ -78,6 +123,7 @@ const FileUpload: React.ComponentType<WidgetProps & WithValue> = ({storeKeys, on
                         console.error('File upload fetch error!', e)
                         setLoading(PROGRESS_ERROR)
                     })
+
             }}
         />
 
@@ -88,40 +134,38 @@ const FileUpload: React.ComponentType<WidgetProps & WithValue> = ({storeKeys, on
                     {loading === PROGRESS_ERROR ? 'upload failed' : 'uploading...'}
                 </Typography>
             </Box> : null}
-        {value?.get('link') ?
+        {Map.isMap(value) && value?.get('link') ?
             <Box p={2}>
                 <Typography variant={'subtitle2'} gutterBottom>Uploaded File:</Typography>
                 <Box px={2}>
                     <pre style={{margin: 0}}><code>{JSON.stringify(value?.toJS(), undefined, 4)}</code></pre>
-                    <Link href={value?.get('link')} target={'_blank'} rel={'noreferrer noopener'}>open download page</Link>
+                    <Link href={value?.get('link') as string} target={'_blank'} rel={'noreferrer noopener'}>open download page</Link>
                 </Box>
             </Box> :
             <Typography variant={'caption'} color={'textSecondary'}>no file uploaded</Typography>}
     </Box>
 }
 
-const WidgetFileUpload = applyPluginStack(extractValue(FileUpload))
-
 const CustomFormContent: React.FC<{
     storeKeys?: StoreKeys
-    schema: StoreSchemaType
+    schema: SomeSchema
     showValidity?: boolean
 }> = ({storeKeys = List(), schema}) => {
-    const [objectSchema, setObjectSchema] = React.useState<StoreSchemaType>(() => schema)
-    return <ObjectGroup
+    const [objectSchema, setObjectSchema] = React.useState<SomeSchema>(() => schema)
+    return <SchemaLayer
         storeKeys={storeKeys}
         schema={schema} parentSchema={undefined}
         onSchema={setObjectSchema}
     >
         <Grid container dir={'columns'} spacing={4}>
-            <WidgetFileUpload
-                level={1}
+            <WidgetEngine<object, typeof WidgetFileUpload>
                 storeKeys={storeKeys.push('file') as StoreKeys}
-                schema={objectSchema.getIn(['properties', 'file']) as unknown as StoreSchemaType}
+                schema={objectSchema.getIn(['properties', 'file']) as SomeSchema}
                 parentSchema={objectSchema}
+                WidgetOverride={WidgetFileUpload}
             />
         </Grid>
-    </ObjectGroup>
+    </SchemaLayer>
 }
 
 const DemoComponent = () => {
@@ -141,25 +185,23 @@ const DemoComponent = () => {
         >
             <CustomFormContent
                 schema={schema}
-                showValidity={showValidity}
             />
 
-            <DataDebug/>
+            <DataDebugViewer/>
         </UIStoreProvider>
     </React.Fragment>
 }
 
-export const PageCustomUpload: React.ComponentType = () => {
+export const PageCustomUpload = () => {
     return <>
-        <Container maxWidth={'md'} fixed style={{display: 'flex'}}>
-            <Nav/>
-            <Box mx={2} py={1} style={{flexGrow: 1}}>
+        <Container maxWidth={'lg'} fixed>
+            <Paper variant={'outlined'} sx={{px: 2, pt: 1, pb: 4}}>
                 <Box mb={2}>
-                    <Typography variant={'h1'} gutterBottom>UI-Schema Custom Upload</Typography>
-                    <Typography variant={'body2'} gutterBottom>Custom rendering with a native file upload field.</Typography>
+                    <Typography variant={'h1'} gutterBottom>UI-Schema File Upload</Typography>
+                    <Typography variant={'body1'} gutterBottom>Custom rendering with a native file upload field.</Typography>
                 </Box>
                 <DemoComponent/>
-            </Box>
+            </Paper>
         </Container>
     </>
 }

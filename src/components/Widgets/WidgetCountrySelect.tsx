@@ -1,33 +1,34 @@
+import { WidgetProps } from '@ui-schema/react/Widget'
 import React from 'react'
-import { PROGRESS_DONE, PROGRESS_ERROR, PROGRESS_START, StoreSchemaType, useProgress, WidgetProps, WithScalarValue } from '@ui-schema/ui-schema'
-import { CustomWidgetsBinding } from '../UISchema'
 import { List } from 'immutable'
+import { ps, useProgress } from 'react-progress-state/useProgressNext'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Select } from '@ui-schema/ds-material/Widgets/Select'
 
-export const WidgetCountrySelect: React.ComponentType<WidgetProps<CustomWidgetsBinding> & WithScalarValue> = ({schema, ...props}) => {
+export const WidgetCountrySelect: React.ComponentType<WidgetProps> = ({schema, ...props}) => {
     const [countries, setCountries] = React.useState<List<string>>(List())
-    const [loading, setLoading] = useProgress()
+    const [loading, setLoading, startLoading] = useProgress()
 
     React.useEffect(() => {
-        setLoading(PROGRESS_START)
+        const pid = startLoading()
         fetch('https://restcountries.com/v3.1/subregion/europe', {method: 'GET'})
             .then(r => r.json())
             .then(data => {
+                const isPid = setLoading(ps.success, undefined, pid)
+                if(!isPid) return
                 setCountries(List(data.map((d: { name: { common: string } }) => d.name.common)))
-                setLoading(PROGRESS_DONE)
             })
-            .catch(() => {
-                setLoading(PROGRESS_ERROR)
+            .catch((e) => {
+                setLoading(ps.error, e, pid)
             })
     }, [setCountries, setLoading])
 
-    if(loading === PROGRESS_START) {
+    if(loading.progress === ps.none || loading.progress === ps.loading) {
         return <LinearProgress/>
     }
 
     return <Select
         {...props}
-        schema={schema.set('enum', countries) as StoreSchemaType}
+        schema={schema.set('enum', countries)}
     />
 }
